@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useMemo, useState } from "react";
+import { Editor, Aside } from "./components";
+import { AppContext } from "./consts/contexts";
 
 function App() {
+  const [canvas, setCanvas] = useState();
+  const [ctx, setCtx] = useState();
+  const [file, setFile] = useState();
+  const [isImageSelected, setIsImageSelected] = useState();
+  const [image, setImage] = useState();
+  const [pixels, setPixels] = useState([]);
+  const [size, setSize] = useState(1);
+
+  const appDep = useMemo(
+    () => ({
+      canvas: [canvas, setCanvas],
+      ctx: [ctx, setCtx],
+      file: [file, setFile],
+      isImageSelected: [isImageSelected, setIsImageSelected],
+      image: [image, setImage],
+      pixels: [pixels, setPixels],
+      size: [size, setSize],
+    }),
+    [canvas, ctx, file, isImageSelected, image, pixels, size]
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContext.Provider value={appDep}>
+      <div className="app-container">
+        <Aside />
+        <Editor />
+      </div>
+    </AppContext.Provider>
   );
 }
 
